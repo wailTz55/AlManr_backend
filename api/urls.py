@@ -13,6 +13,7 @@ urlpatterns = [
     # path('activities/', views.get_activities, name='activities'),
     path('all-data/', views.get_all_data, name='all_data'),
     path("registration/", views.ApplicationView.as_view(), name="registration"),
+    path("contact/", views.ContactView.as_view(), name="contact"),
 
 
 ]

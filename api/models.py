@@ -283,23 +283,27 @@ class MemberSkill(models.Model):
         return f"{self.name} - {self.member.name}"
 
 def Application_photo_path(instance, filename):
-    return f"applications_photos/{instance.fullName}//photo{filename}"
+    return f"applications_photos/{instance.applicationId}/photo{filename}"
 def Application_id_card_path(instance, filename):
-    return f"applications_photos/{instance.fullName}/id_card{filename}"
+    return f"applications_photos/{instance.applicationId}/id_card{filename}"
 
 class Application(models.Model):
-    applicationId = models.AutoField(default=0,primary_key=True, verbose_name="المعرف")
+    applicationId = models.AutoField(primary_key=True, verbose_name="المعرف")
     photo = models.ImageField(
         upload_to=Application_photo_path, 
         verbose_name="الصورة الشخصية"
     )
     id_card = models.ImageField(
+        blank=True, # remove
+        null=True,  # remove
         upload_to=Application_id_card_path, 
         verbose_name="صورة بطاقة الهوية"
     )
     fullName = models.CharField(
         max_length=255, 
-        verbose_name="الاسم الكامل"
+        verbose_name="الاسم الكامل",
+        unique=True
+
     )
     email = models.EmailField(
         max_length=255, 
@@ -333,3 +337,27 @@ class Application(models.Model):
 
     def __str__(self):
         return f"{self.fullName} - {self.applicationId}"
+
+
+class Contact(models.Model):
+
+    REASON_CHOICES = [
+        ("membership", "استفسار عن العضوية"),
+        ("activities", "الأنشطة والفعاليات"),
+        ("partnership", "شراكة أو تعاون"),
+        ("complaint", "شكوى أو اقتراح"),
+        ("other", "أخرى"),
+    ]
+
+
+
+    name = models.CharField(max_length=100, verbose_name="الاسم")
+    email = models.EmailField(max_length=100, verbose_name="البريد الإلكتروني",null=True,blank=True)
+    contactReason = models.CharField(max_length=20, choices=REASON_CHOICES)  # 👈 هنا السبب
+    phone = models.CharField(max_length=10, verbose_name="رقم الهاتف")
+    subject = models.CharField(max_length=200, verbose_name="الموضوع")
+    message = models.TextField(verbose_name="الرسالة")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.name} - {self.reason}"
