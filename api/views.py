@@ -1,19 +1,13 @@
-# from rest_framework.response import Response
-# from rest_framework.decorators import api_view
-# from .models import Activity
-# from .serializers import ActivitySerializer
 
-# @api_view(['GET'])
-# def get_activities(request):
-#     activities = Activity.objects.all()
-#     serializer = ActivitySerializer(activities, many=True)
-#     return Response(serializer.data)
-
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from .models import Application
+from .serializers import *
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Activity, News, Members
-from .serializers import ActivitySerializer, NewsSerializer, MembersSerializer
+from .serializers import *
 
 @api_view(['GET'])
 def get_all_data(request):
@@ -32,11 +26,7 @@ def get_all_data(request):
     })
 
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Application
-from .serializers import *
+
 class ApplicationView(APIView):
     def post(self, request, *args, **kwargs):
 

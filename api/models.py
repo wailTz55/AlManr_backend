@@ -269,7 +269,6 @@ class Members(models.Model):
 class MemberAchievement(models.Model):
     member = models.ForeignKey(Members, on_delete=models.CASCADE, related_name="achievements")
     title = models.CharField(max_length=255, verbose_name="الإنجاز")
-
     def __str__(self):
         return f"{self.title} - {self.member.name}"
 
