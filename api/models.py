@@ -21,7 +21,7 @@ class Activity(models.Model):
         ("from-orange-400 to-red-500", "برتقالي → أحمر"),
     ]
     STATUS_CHOICES = [
-        ("معلق", "معلق"),
+        # ("معلق", "معلق"),
         ("قادم", "قادم"),
         ("مكتمل", "مكتمل"),
     ]
@@ -35,14 +35,7 @@ class Activity(models.Model):
     category = models.CharField(max_length=100, verbose_name="الفئة",null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name="الحالة")
     description = models.TextField(verbose_name="الوصف")
-    # color = models.CharField(max_length=50, choices=COLOR_CHOICES, verbose_name="اللون",null=True, blank=True)
-    # def save(self, *args, **kwargs):
-    #     # تعيين لون تلقائي إذا لم يتم تحديده
-    #     if not self.color:
-    #         self.color = random.choice([c[0] for c in self.COLOR_CHOICES])
 
-
-    #     super().save(*args, **kwargs)
     class Meta:
         verbose_name = "نشاط"
         verbose_name_plural = "الأنشطة"
@@ -112,34 +105,7 @@ class News(models.Model):
         ("initiative", "مبادرة"),        # خبر عن مبادرة جديدة
     ]
 
-    # الأيقونات (Icons)
-    # ICON_CHOICES = [
-    #     ("Megaphone", "📢 مكبر صوت (إعلان)"),
-    #     ("Users", "👥 أشخاص (مستخدمين / مجتمع)"),
-    #     ("Star", "⭐ نجمة (تميز / إنجاز)"),
-    #     ("Bell", "🔔 جرس (تنبيه / تذكير)"),
-    #     ("Trophy", "🏆 كأس (جائزة / نجاح)"),
-    # ]
-
-    # # الألوان (Colors)
-    # COLOR_CHOICES = [
-    #     ("text-primary", "أزرق أساسي"),       # اللون الرئيسي (Primary)
-    #     ("text-secondary", "رمادي ثانوي"),    # اللون الثانوي
-    #     ("text-accent", "أخضر بارز"),         # لون مميز (Accent)
-    #     ("text-chart-3", "برتقالي إحصائي"),   # لون برتقالي/إحصائي
-    #     ("text-chart-4", "بنفسجي إحصائي"),    # لون بنفسجي/إحصائي
-    # ]
-
-    # # خلفيات (Background Colors)
-    # BG_CHOICES = [
-    #     ("bg-primary/10", "خلفية زرقاء فاتحة"),
-    #     ("bg-secondary/10", "خلفية رمادية فاتحة"),
-    #     ("bg-accent/10", "خلفية خضراء فاتحة"),
-    #     ("bg-chart-3/10", "خلفية برتقالية فاتحة"),
-    #     ("bg-chart-4/10", "خلفية بنفسجية فاتحة"),
-    # ]
-
-    id = models.AutoField(primary_key=True)  
+    id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, verbose_name="العنوان")
     excerpt = models.TextField(verbose_name="ملخص قصير")
     content = models.TextField(verbose_name="المحتوى")
@@ -153,31 +119,15 @@ class News(models.Model):
         limit_choices_to={"type": "admin"},  # يجيب فقط الأعضاء الإداريين
         verbose_name="الكاتب"
     )
+
     # category = models.CharField(max_length=100, verbose_name="التصنيف")
-    
-    type = models.CharField(max_length=100, choices=TYPE_CHOICES, verbose_name="نوع الخبر")
-    # icon = models.CharField(max_length=100, choices=ICON_CHOICES, blank=True, null=True, verbose_name="الأيقونة")
-    # color = models.CharField(max_length=50, choices=COLOR_CHOICES, blank=True, null=True, verbose_name="اللون")
-    # bgColor = models.CharField(max_length=50, choices=BG_CHOICES, blank=True, null=True, verbose_name="لون الخلفية")
-    
+    category = models.CharField(max_length=100, choices=TYPE_CHOICES, verbose_name="نوع الخبر")
+
     image = models.ImageField(upload_to=news_image_path, verbose_name="الصورة")  
     views = models.PositiveIntegerField(default=0, verbose_name="عدد المشاهدات")
     likes = models.PositiveIntegerField(default=0, verbose_name="عدد الإعجابات")
     featured = models.BooleanField(default=False, verbose_name="مميز")
-    # def save(self, *args, **kwargs):
-    #     # تعيين لون تلقائي إذا لم يتم تحديده
-    #     if not self.color:
-    #         self.color = random.choice([c[0] for c in self.COLOR_CHOICES])
 
-    #     # تعيين أيقونة تلقائية إذا لم يتم تحديدها
-    #     if not self.icon:
-    #         self.icon = random.choice([i[0] for i in self.ICON_CHOICES])
-
-    #     # تعيين أيقونة تلقائية إذا لم يتم تحديدها
-    #     if not self.bgColor:
-    #         self.bgColor = random.choice([i[0] for i in self.BG_CHOICES])
-
-    #     super().save(*args, **kwargs)
     def __str__(self):
         return self.title
     class Meta:
@@ -188,8 +138,9 @@ class News(models.Model):
 
 
 
+from django.core.exceptions import ValidationError
+
 class Members(models.Model):
-    # الأدوار (Role Choices)
     ROLE_CHOICES = [
         ("president", "رئيس"),
         ("vice1", "نائب أول"),
@@ -203,62 +154,45 @@ class Members(models.Model):
         ("social_committee", "رئيس لجنة الشؤون الاجتماعية"),
         ("culture_committee", "رئيس لجنة النشاطات الثقافية"),
         ("sports_committee", "رئيس لجنة النشاطات الرياضية"),
-    ]
-
-    # نوع العضو
-    TYPE_CHOICES = [
-        ("admin", "عضو إداري"),
-        ("normal", "عضو عادي"),
-    ]
-
-    # الألوان
-    COLOR_CHOICES = [
-        ("bg-primary", "أزرق رئيسي"),
-        ("bg-secondary", "رمادي ثانوي"),
-        ("bg-accent", "أخضر بارز"),
-        ("bg-chart-3", "برتقالي"),
-        ("bg-chart-4", "بنفسجي"),
-        ("bg-chart-5", "أحمر"),
-    ]
-
-    # الأيقونات
-    ICON_CHOICES = [
-        ("Crown", "👑 تاج (رئيس / قيادي)"),
-        ("Star", "⭐ نجم (تميز)"),
-        ("Award", "🏅 جائزة (إنجاز)"),
-        ("Users", "👥 أعضاء / فريق"),
+        ("normal", "عادي"),
     ]
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255, verbose_name="الاسم الكامل")
     role = models.CharField(max_length=100, choices=ROLE_CHOICES, verbose_name="الدور")
-    # department = models.CharField(max_length=100, blank=True, null=True, verbose_name="القسم")
     image = models.ImageField(upload_to="members_images/", blank=True, null=True, verbose_name="الصورة")
     bio = models.TextField(blank=True, null=True, verbose_name="نبذة قصيرة")
     joinDate = models.DateField(default=timezone.now, blank=True, null=True, verbose_name="تاريخ الانضمام")
-
     email = models.EmailField(max_length=255, blank=True, null=True, verbose_name="البريد الإلكتروني")
     phone = models.CharField(max_length=50, blank=True, null=True, verbose_name="الهاتف")
-    # location = models.CharField(max_length=255, blank=True, null=True, verbose_name="العنوان")
     education = models.CharField(max_length=255, blank=True, null=True, verbose_name="المستوى التعليمي")
 
+    TYPE_CHOICES = [
+        ("admin", "عضو إداري"),
+        ("normal", "عضو عادي"),
+    ]
     type = models.CharField(max_length=100, choices=TYPE_CHOICES, default="normal", verbose_name="نوع العضو")
-    color = models.CharField(max_length=50, choices=COLOR_CHOICES, blank=True, null=True, verbose_name="اللون")
-    icon = models.CharField(max_length=100, choices=ICON_CHOICES, blank=True, null=True, verbose_name="الأيقونة")
 
     def save(self, *args, **kwargs):
-        # تعيين لون تلقائي إذا لم يتم تحديده
-        if not self.color:
-            self.color = random.choice([c[0] for c in self.COLOR_CHOICES])
+        # المناصب الحصرية (يسمح لعضو واحد فقط)
+        unique_roles = [
+            "president", "vice1", "vice2",
+            "general_secretary", "vice_secretary",
+            "treasurer", "vice_treasurer",
+            "member1", "member2",
+            "social_committee", "culture_committee", "sports_committee"
+        ]
 
-        # تعيين أيقونة تلقائية إذا لم يتم تحديدها
-        if not self.icon:
-            self.icon = random.choice([i[0] for i in self.ICON_CHOICES])
+        if self.role in unique_roles:
+            exists = Members.objects.filter(role=self.role).exclude(id=self.id).exists()
+            if exists:
+                raise ValidationError(f"المنصب '{dict(self.ROLE_CHOICES)[self.role]}' محجوز بالفعل ولا يمكن تكراره.")
 
         super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
+
     class Meta:
         verbose_name = "عضو"
         verbose_name_plural = "الاعضاء"

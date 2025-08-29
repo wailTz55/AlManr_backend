@@ -45,15 +45,15 @@ class MemberSkillInline(admin.TabularInline):
 @admin.register(Members)
 class MembersAdmin(admin.ModelAdmin):
     list_display = ("name", "role", "type", "email", "phone", "joinDate")
-    list_filter = ("role", "type", "color")
+    list_filter = ("role", "type")
     search_fields = ("name", "role", "email", "phone")
 
     inlines = [MemberAchievementInline, MemberSkillInline]
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ("title", "date", "time", "author", "type", "featured")  # الأعمدة في القائمة
-    list_filter = ("type", "featured", "date",)          # الفلاتر الجانبية
+    list_display = ("title", "date", "time", "author", "category", "featured")  # الأعمدة في القائمة
+    list_filter = ("category", "featured", "date",)          # الفلاتر الجانبية
     search_fields = ("title", "excerpt", "content")                         # البحث
     ordering = ("-date", "-time")       
     exclude = ("views", "likes")
