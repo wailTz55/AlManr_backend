@@ -11,8 +11,8 @@ from .serializers import *
 
 @api_view(['GET'])
 def get_all_data(request):
-    activities = Activity.objects.all()
-    news = News.objects.all()
+    activities = Activity.objects.all().order_by('-date') 
+    news = News.objects.all().order_by('-date') 
     members = Members.objects.all()
 
     activities_serializer = ActivitySerializer(activities, many=True)
