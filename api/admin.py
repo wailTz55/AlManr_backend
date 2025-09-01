@@ -1,5 +1,9 @@
 from django.contrib import admin
 from .models import *
+from django.contrib import admin
+from django.contrib import messages
+from .models import Application, Members
+
 
 class ActivityHighlightsInline(admin.TabularInline):
     model = ActivityHighlights
@@ -58,18 +62,46 @@ class NewsAdmin(admin.ModelAdmin):
     ordering = ("-date", "-time")       
     exclude = ("views", "likes")
 
+@admin.action(description="المصادقة ونقل إلى الأعضاء")
+def approve_and_add_to_members(modeladmin, request, queryset):
+    for application in queryset:
+        # نتأكد ما إذا كان العضو موجود أصلاً
+        if Members.objects.filter(name=application.fullName).exists():
+            messages.warning(request, f"⚠ {application.fullName} موجود مسبقاً كعضو.")
+            continue
 
+        # إنشاء عضو جديد بناءً على بيانات الطلب
+        member = Members.objects.create(
+            name=application.fullName,
+            email=application.email,
+            phone=application.phone,
+            image=application.photo,   # ننقل الصورة
+            role="normal",             # تعيين افتراضي (يمكن تغييره لاحقاً من الإدارة)
+            type="normal"
+        )
+        messages.success(request, f"✅ تمت إضافة {application.fullName} إلى الأعضاء بنجاح.")
+
+        # بعد المصادقة نحذف الطلب من جدول Application
+        application.delete()
+
+        # (اختياري) إذا تحب تحذف الطلب بعد المصادقة
+        # application.delete()
+
+# تسجيل الأكشن داخل لوحة الإدارة
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display = ("applicationId", "fullName", "email", "phone", "age", "submitted_at")
+    list_display = ("applicationId", "fullName", "email", "phone", "submitted_at")
     search_fields = ("applicationId", "fullName", "email", "phone")
     list_filter = ("age", "submitted_at")
-    readonly_fields = ("submitted_at",)  # ما يتعدلش تاريخ التقديم
+    readonly_fields = ("submitted_at",) 
+    actions = [approve_and_add_to_members]
 
-    # نجعل كل الحقول للقراءة فقط
+        # نجعل كل الحقول للقراءة فقط
     readonly_fields = ("applicationId", "fullName", "email", "phone", "age", "submitted_at")
 
     # منع الإضافة
     def has_add_permission(self, request):
         return False
+
+
 

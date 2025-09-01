@@ -25,6 +25,14 @@ class Activity(models.Model):
         ("قادم", "قادم"),
         ("مكتمل", "مكتمل"),
     ]
+    CATEGORY_CHOICES = [
+        ("مخيم", "مخيم"),
+        ("ورشة", "ورشة"),
+        ("رياضة", "رياضة"),
+        ("فنون", "فنون"),
+        ("استكشاف", "استكشاف"),
+        ("مؤتمر", "مؤتمر"),
+    ]
 
     id = models.AutoField(primary_key=True, verbose_name="المعرف")
     title = models.CharField(max_length=255, verbose_name="العنوان")
@@ -32,7 +40,7 @@ class Activity(models.Model):
     location = models.CharField(default='Aïn El Kebira', max_length=255, verbose_name="المكان")
     participants = models.PositiveIntegerField(verbose_name="عدد المشاركين",null=True, blank=True)
     duration = models.CharField(max_length=50,null=True, blank=True, verbose_name="المدة")
-    category = models.CharField(max_length=100, verbose_name="الفئة",null=True, blank=True)
+    category = models.CharField(max_length=100,choices=CATEGORY_CHOICES, verbose_name="الفئة",null=True, blank=True)
     status = models.CharField(max_length=100, choices=STATUS_CHOICES, verbose_name="الحالة")
     description = models.TextField(verbose_name="الوصف")
 
