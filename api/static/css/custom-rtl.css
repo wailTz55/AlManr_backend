@@ -1,0 +1,46 @@
+/* جعل الصفحة ككل RTL بشكل مرتب */
+html, body {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* الشريط الجانبي يظهر على اليمين */
+.sidebar, .jazzmin-sidebar {
+    float: right !important;
+    right: 0 !important;
+    left: auto !important;
+}
+
+/* المحتوى الأساسي يبدأ من اليمين */
+.content-wrapper, .main-content {
+    margin-right: 250px !important; /* نفس عرض الـ sidebar */
+    margin-left: 0 !important;
+    text-align: right !important;
+}
+
+/* تصحيح navbar */
+.navbar, .navbar-nav {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* الجداول تكون RTL */
+table, .table {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* الحقول داخل الفورم */
+.form-row, .form-group {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* تحسين عرض الأيقونات بجانب النص */
+.fa, .fas {
+    margin-left: 5px;
+    margin-right: 0;
+}
+.nav-sidebar{
+    padding: 0 !important;
+}
