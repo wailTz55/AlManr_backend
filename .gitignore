@@ -1,0 +1,19 @@
+# Django settings and database
+alManar/settings.py
+db.sqlite3
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Static and media
+staticfiles/
+media/
+
+# IDE files
+.vscode/
+.idea/
